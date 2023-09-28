@@ -235,7 +235,7 @@ void process_instruction()
                 // BEQ
                 uint32_t offset = imm_sign_extend(imm) << 2;
                 if (CURRENT_STATE.REGS[rs] == CURRENT_STATE.REGS[rt]) {
-                    NEXT_STATE.PC = CURRENT_STATE.PC + offset + 4;
+                    NEXT_STATE.PC = CURRENT_STATE.PC + offset;
                 }
                 break;
             }
@@ -243,7 +243,7 @@ void process_instruction()
                 // BNE
                 uint32_t offset = imm_sign_extend(imm) << 2;
                 if (CURRENT_STATE.REGS[rs] != CURRENT_STATE.REGS[rt]) {
-                    NEXT_STATE.PC = CURRENT_STATE.PC + offset + 4;
+                    NEXT_STATE.PC = CURRENT_STATE.PC + offset;
                 }
                 break;
             }
@@ -252,7 +252,7 @@ void process_instruction()
                 uint32_t offset = imm_sign_extend(imm) << 2;
                 if ((CURRENT_STATE.REGS[rs] & 0x80000000) != 0 ||
                     CURRENT_STATE.REGS[rs] == 0) {
-                    NEXT_STATE.PC = CURRENT_STATE.PC + offset + 4;
+                    NEXT_STATE.PC = CURRENT_STATE.PC + offset;
                 } 
             }
             case 0b000111: {
@@ -260,7 +260,7 @@ void process_instruction()
                 uint32_t offset = imm_sign_extend(imm) << 2;
                 if ((CURRENT_STATE.REGS[rs] & 0x80000000) != 0 ||
                     CURRENT_STATE.REGS[rs] == 0) {
-                    NEXT_STATE.PC = CURRENT_STATE.PC + offset + 4;
+                    NEXT_STATE.PC = CURRENT_STATE.PC + offset;
                 }
             }
             case 0b001000: {
@@ -365,14 +365,14 @@ void process_instruction()
                     case 0b00000: {
                         // BLTZ
                         if ((CURRENT_STATE.REGS[rs] & 0x80000000) != 0) {
-                            NEXT_STATE.PC = CURRENT_STATE.PC + offset + 4;
+                            NEXT_STATE.PC = CURRENT_STATE.PC + offset;
                         }
                         break;
                     }
                     case 0b00001: {
                         // BGEZ
                         if ((CURRENT_STATE.REGS[rs] & 0x80000000) == 0) {
-                            NEXT_STATE.PC = CURRENT_STATE.PC + offset + 4;
+                            NEXT_STATE.PC = CURRENT_STATE.PC + offset;
                         }
                         
                         break;
@@ -381,7 +381,7 @@ void process_instruction()
                         // BLTZAL
                         NEXT_STATE.REGS[31] = CURRENT_STATE.PC + 4;
                         if ((CURRENT_STATE.REGS[rs] & 0x80000000) != 0) {
-                            NEXT_STATE.PC = CURRENT_STATE.PC + offset + 4;
+                            NEXT_STATE.PC = CURRENT_STATE.PC + offset;
                         }
                         break;
                     }
@@ -389,11 +389,12 @@ void process_instruction()
                         // BGEZAL
                         NEXT_STATE.REGS[31] = CURRENT_STATE.PC + 4;
                         if ((CURRENT_STATE.REGS[rs] & 0x80000000) == 0) {
-                            NEXT_STATE.PC = CURRENT_STATE.PC + offset + 4;
+                            NEXT_STATE.PC = CURRENT_STATE.PC + offset;
                         }
                         break;
                     }
                 }
+                break;
             }
             default:{
                 printf("illegal instruction!");
@@ -401,5 +402,5 @@ void process_instruction()
             }
         }
     }
-    printf("reg: 0x%08x\n", CURRENT_STATE.REGS[5]);
+    printf("the instruction is: 0x%08x\n", curr_inst);
 }
